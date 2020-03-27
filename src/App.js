@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Pizza from "./components/Pizza"
 import Home from "./components/Home"
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (

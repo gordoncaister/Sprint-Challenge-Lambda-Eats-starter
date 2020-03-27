@@ -2,15 +2,26 @@ import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import {Form, Field, withFormik} from "formik";
 import * as Yup from "yup";
+import {Modal, Button} from 'react-bootstrap'
+
 
 const Pizza = ({touched, errors, status}) => {
+
     const [order, setOrder] = useState([])
-    let toppingChoice ="";
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     useEffect(()=>{
-        setOrder(status)
-        status.pineapple == true ? toppingChoice+= " Pineapple,": null;
+        status && setOrder(status)
+        
     },[status]);
     console.log(order)
+
+    function isGlutenFree(){
+        return order.glutenfree === true ?  ", gluten free" : null
+    }
     return (
         <div>
         <Form>
@@ -27,6 +38,7 @@ const Pizza = ({touched, errors, status}) => {
                     <option value="large">Large</option>
                 </Field>
                 {" "}
+                <label>Gluten free?  <Field type="checkbox" name="glutenfree"/></label>
                 </label>
                 <br/>
                 <br/>
@@ -43,19 +55,28 @@ const Pizza = ({touched, errors, status}) => {
                 </label>
                 <br/>
                 <br/>
-                <button>Order!</button>
+                <button onClick = {handleShow}>Order!</button>
             </div>
         </Form>
-        <div>
-            {}
-            <h1>Order for {order.name}</h1>
-            <p>Size: {order.size}, toppings:  </p>
-        </div>
-        {/* {order.name && (
-            <ul key={user.id}>
-                <li>Name: {user.name}</li>
-            </ul>
-        )} */}
+        {order.name &&(
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Order for {order.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Size: {order.size} {isGlutenFree()} </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                </Modal.Footer>
+            </Modal>
+            
+            
+                
+                
+            
+            )}
+        
         </div>
     )
 }
@@ -64,6 +85,7 @@ export default withFormik({
     mapPropsToValues: props => ({
         name: props.name || "",
         size: "small",
+        glutenfree: false,
         cheese: false,
         pepperoni: false,
         pineapple: false,
@@ -79,14 +101,14 @@ export default withFormik({
     handleSubmit: (values, {resetForm, setStatus})=> {
         
         console.log(values)
-        setStatus(values)
-        // axios.post("https://reqres.in/api/users/",values)
-        // .then(response => {
-        //     console.log("success");
-        //     setStatus(response.data);
-        //     resetForm();
-        // })
-        // .catch(err => console.log(err.response));
+        //setStatus(values)
+        axios.post("https://reqres.in/api/users/",values)
+        .then(response => {
+            console.log("success");
+            setStatus(response.data);
+            resetForm();
+        })
+        .catch(err => console.log(err.response));
 
     }
     
