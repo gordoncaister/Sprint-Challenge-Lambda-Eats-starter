@@ -12,6 +12,7 @@ export default function App() {
   return (
     <Router>
       <div>
+        <h1>Lambda Eats</h1>
         <nav>
           <ul>
             <li>
