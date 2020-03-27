@@ -4,6 +4,13 @@ import {Form, Field, withFormik} from "formik";
 import * as Yup from "yup";
 
 const Pizza = ({touched, errors, status}) => {
+    const [order, setOrder] = useState([])
+    let toppingChoice ="";
+    useEffect(()=>{
+        setOrder(status)
+        status.pineapple == true ? toppingChoice+= " Pineapple,": null;
+    },[status]);
+    console.log(order)
     return (
         <div>
         <Form>
@@ -39,8 +46,12 @@ const Pizza = ({touched, errors, status}) => {
                 <button>Order!</button>
             </div>
         </Form>
-        
-        {/* {user.name && (
+        <div>
+            {}
+            <h1>Order for {order.name}</h1>
+            <p>Size: {order.size}, toppings:  </p>
+        </div>
+        {/* {order.name && (
             <ul key={user.id}>
                 <li>Name: {user.name}</li>
             </ul>
@@ -68,6 +79,7 @@ export default withFormik({
     handleSubmit: (values, {resetForm, setStatus})=> {
         
         console.log(values)
+        setStatus(values)
         // axios.post("https://reqres.in/api/users/",values)
         // .then(response => {
         //     console.log("success");
